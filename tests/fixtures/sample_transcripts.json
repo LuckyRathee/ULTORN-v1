@@ -1,0 +1,143 @@
+{
+  "weather": [
+    {
+      "transcript": "What's the weather like in London today?",
+      "expected_intent": "weather",
+      "expected_location": "London",
+      "expected_confidence_min": 0.8
+    },
+    {
+      "transcript": "Will it rain in New York tomorrow?",
+      "expected_intent": "weather",
+      "expected_location": "New York",
+      "expected_confidence_min": 0.8
+    },
+    {
+      "transcript": "How hot is it in Tokyo right now?",
+      "expected_intent": "weather",
+      "expected_location": "Tokyo",
+      "expected_confidence_min": 0.7
+    },
+    {
+      "transcript": "Weather forecast for Paris this weekend",
+      "expected_intent": "weather",
+      "expected_location": "Paris",
+      "expected_confidence_min": 0.7
+    }
+  ],
+  "calendar_create": [
+    {
+      "transcript": "Schedule a meeting with John tomorrow at 2pm for 1 hour",
+      "expected_intent": "calendar_create",
+      "expected_confidence_min": 0.7
+    },
+    {
+      "transcript": "Add a dentist appointment on Friday at 10am for 30 minutes",
+      "expected_intent": "calendar_create",
+      "expected_confidence_min": 0.7
+    },
+    {
+      "transcript": "Create a calendar event for team lunch next Monday at noon",
+      "expected_intent": "calendar_create",
+      "expected_confidence_min": 0.6
+    }
+  ],
+  "calendar_list": [
+    {
+      "transcript": "What meetings do I have today?",
+      "expected_intent": "calendar_list",
+      "expected_confidence_min": 0.8
+    },
+    {
+      "transcript": "Show me my calendar for this week",
+      "expected_intent": "calendar_list",
+      "expected_confidence_min": 0.7
+    },
+    {
+      "transcript": "Do I have any appointments tomorrow?",
+      "expected_intent": "calendar_list",
+      "expected_confidence_min": 0.8
+    }
+  ],
+  "task_create": [
+    {
+      "transcript": "Remind me to buy groceries after work",
+      "expected_intent": "task_create",
+      "expected_confidence_min": 0.7
+    },
+    {
+      "transcript": "Add a task to finish the report by Friday",
+      "expected_intent": "task_create",
+      "expected_confidence_min": 0.7
+    },
+    {
+      "transcript": "Create a high priority task to call the client tomorrow morning",
+      "expected_intent": "task_create",
+      "expected_confidence_min": 0.6
+    }
+  ],
+  "task_list": [
+    {
+      "transcript": "What tasks do I have pending?",
+      "expected_intent": "task_list",
+      "expected_confidence_min": 0.8
+    },
+    {
+      "transcript": "Show me my todo list",
+      "expected_intent": "task_list",
+      "expected_confidence_min": 0.8
+    },
+    {
+      "transcript": "List all completed tasks",
+      "expected_intent": "task_list",
+      "expected_confidence_min": 0.7
+    }
+  ],
+  "ambiguous_low_confidence": [
+    {
+      "transcript": "Hello",
+      "expected_intent": "unknown",
+      "expected_confidence_max": 0.5
+    },
+    {
+      "transcript": "Um, I don't know, maybe something about weather?",
+      "expected_intent": "unknown",
+      "expected_confidence_max": 0.5
+    },
+    {
+      "transcript": "Can you do that thing?",
+      "expected_intent": "unknown",
+      "expected_confidence_max": 0.4
+    },
+    {
+      "transcript": "The thing with the stuff",
+      "expected_intent": "unknown",
+      "expected_confidence_max": 0.3
+    },
+    {
+      "transcript": "Maybe schedule something or check weather or whatever",
+      "expected_intent": "unknown",
+      "expected_confidence_max": 0.5
+    }
+  ],
+  "edge_cases": [
+    {
+      "transcript": "What's the temperature in London and also schedule a meeting for 3pm",
+      "expected_intent": "unknown",
+      "description": "Multiple intents in one - should be unknown or pick primary",
+      "expected_confidence_max": 0.6
+    },
+    {
+      "transcript": "Weather in Mars",
+      "expected_intent": "weather",
+      "description": "Invalid location but clear weather intent",
+      "expected_confidence_min": 0.5
+    },
+    {
+      "transcript": "Set a reminder for yesterday",
+      "expected_intent": "task_create",
+      "description": "Past date - should still extract intent but with lower confidence",
+      "expected_confidence_min": 0.4
+    }
+  ]
+}
