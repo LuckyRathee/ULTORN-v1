@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     supabase_service_key: str = Field(alias="SUPABASE_SERVICE_KEY")
 
     # STT
-    stt_provider: Literal["groq", "local"] = Field(default="groq", alias="STT_PROVIDER")
+    stt_provider: Literal["groq", "local", "elevenlabs"] = Field(default="groq", alias="STT_PROVIDER")
     groq_api_key: Optional[str] = Field(default=None, alias="GROQ_API_KEY")
     whisper_model: str = Field(default="base", alias="WHISPER_MODEL")
 

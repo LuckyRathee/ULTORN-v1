@@ -8,13 +8,50 @@ converts to standard format for transcription.
 from typing import Optional
 import base64
 import httpx
-import magic  # python-magic for MIME detection
 
 from ..state.states import StateData, PipelineState
 from ..schemas.api import AudioInputRequest
 from ..utils.errors import AudioError
 from ..utils.audio import validate_audio, convert_to_wav
 from ..config import settings
+
+
+def detect_audio_format(audio_bytes: bytes) -> Optional[str]:
+    """
+    Detect audio format from file headers (magic bytes) natively in Python.
+    Does not require libmagic or any external system DLLs.
+    """
+    if len(audio_bytes) < 12:
+        return None
+        
+    # WAV: RIFF....WAVE
+    if audio_bytes.startswith(b"RIFF") and audio_bytes[8:12] == b"WAVE":
+        return "wav"
+        
+    # MP3: ID3 or standard frame headers
+    if audio_bytes.startswith(b"ID3") or audio_bytes.startswith(b"\xFF\xFB") or audio_bytes.startswith(b"\xFF\xF3") or audio_bytes.startswith(b"\xFF\xF2"):
+        return "mp3"
+        
+    # FLAC: fLaC
+    if audio_bytes.startswith(b"fLaC"):
+        return "flac"
+        
+    # OGG: OggS
+    if audio_bytes.startswith(b"OggS"):
+        return "ogg"
+        
+    # WebM: EBML header starting with 1A 45 DF A3
+    if audio_bytes.startswith(b"\x1A\x45\xDF\xA3"):
+        return "webm"
+        
+    # M4A / MP4: search for ftyp box at offset 4
+    ftyp_box = audio_bytes[4:8]
+    if ftyp_box == b"ftyp":
+        brand = audio_bytes[8:12]
+        if brand in (b"M4A ", b"mp42", b"isom", b"MSNV", b"dash"):
+            return "m4a"
+            
+    return None
 
 
 # Supported audio formats
@@ -110,8 +147,20 @@ async def _fetch_and_decode_audio(request: AudioInputRequest) -> tuple[bytes, st
         except Exception as e:
             raise AudioError("AUDIO_INVALID_BASE64", "Invalid base64 encoding") from e
         
-        # Detect format from magic bytes
-        mime_type = magic.from_buffer(audio_bytes, mime=True)
+        # Detect format from magic bytes natively
+        audio_format = detect_audio_format(audio_bytes)
+        if not audio_format:
+            raise AudioError("AUDIO_UNSUPPORTED_FORMAT", "Unsupported or unrecognized audio format")
+        
+    elif request.audio_url:
+        # Fetch from URL
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.get(request.audio_url)
+            response.raise_for_status()
+            audio_bytes = response.content
+            
+        # Detect format from Content-Type or magic bytes natively
+        content_type = response.headers.get("content-type", "").lower()
         format_map = {
             "audio/wav": "wav",
             "audio/x-wav": "wav",
@@ -123,33 +172,12 @@ async def _fetch_and_decode_audio(request: AudioInputRequest) -> tuple[bytes, st
             "audio/webm": "webm",
             "audio/flac": "flac",
         }
-        audio_format = format_map.get(mime_type)
+        audio_format = format_map.get(content_type)
         if not audio_format:
-            raise AudioError("AUDIO_UNSUPPORTED_FORMAT", f"Unsupported audio format: {mime_type}")
-        
-    elif request.audio_url:
-        # Fetch from URL
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.get(request.audio_url)
-            response.raise_for_status()
-            audio_bytes = response.content
+            audio_format = detect_audio_format(audio_bytes)
             
-        # Detect format from Content-Type or magic bytes
-        content_type = response.headers.get("content-type", "")
-        mime_type = content_type if content_type in SUPPORTED_MIME_TYPES else magic.from_buffer(audio_bytes, mime=True)
-        format_map = {
-            "audio/wav": "wav",
-            "audio/mp3": "mp3",
-            "audio/mpeg": "mp3",
-            "audio/mp4": "m4a",
-            "audio/m4a": "m4a",
-            "audio/ogg": "ogg",
-            "audio/webm": "webm",
-            "audio/flac": "flac",
-        }
-        audio_format = format_map.get(mime_type)
         if not audio_format:
-            raise AudioError("AUDIO_UNSUPPORTED_FORMAT", f"Unsupported audio format: {mime_type}")
+            raise AudioError("AUDIO_UNSUPPORTED_FORMAT", f"Unsupported audio format: {content_type}")
     else:
         raise AudioError("AUDIO_NO_INPUT", "No audio data provided (base64 or URL required)")
     

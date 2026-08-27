@@ -129,6 +129,12 @@ class ProcessAudioResponse(BaseModel):
     total_latency_ms: int
 
 
+class GreetResponse(BaseModel):
+    """Response model for greeting endpoint."""
+    response_text: str
+    audio_url: Optional[str] = None
+
+
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint with dependency status."""
@@ -175,6 +181,29 @@ async def health_check():
         version="1.0.0",
         checks=checks,
         uptime_seconds=0,  # Would track actual uptime in production
+    )
+
+
+@app.get("/api/v1/greet", response_model=GreetResponse)
+async def greet_user():
+    """Generate a greeting response with optional TTS."""
+    response_text = "Hello! I am Jarvis. How can I help you today?"
+    audio_url = None
+    
+    if settings.tts_provider != "none":
+        try:
+            from .services.tts import synthesize_speech
+            audio_url = await synthesize_speech(
+                text=response_text,
+                provider=settings.tts_provider,
+                voice_id=settings.elevenlabs_voice_id,
+            )
+        except Exception as e:
+            logger.error("greeting_tts_failed", error=str(e))
+            
+    return GreetResponse(
+        response_text=response_text,
+        audio_url=audio_url,
     )
 
 

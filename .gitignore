@@ -1,0 +1,32 @@
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python & Virtualenv
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Node & Next.js build artifacts
+node_modules/
+.next/
+out/
+dist/
+dist-electron/
+.turbo/
+
+# Scratch & Temporary uploads
+scratch/
+*.webm
+*.wav
+*.mp3
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.agents/

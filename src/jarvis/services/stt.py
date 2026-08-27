@@ -35,7 +35,7 @@ class STTError(JarvisError):
 
 async def transcribe_audio(
     audio_bytes: bytes,
-    provider: Literal["groq", "local"] = "groq",
+    provider: Literal["groq", "local", "elevenlabs"] = "groq",
     model: Optional[str] = None,
 ) -> STTResult:
     """
@@ -43,7 +43,7 @@ async def transcribe_audio(
     
     Args:
         audio_bytes: Raw audio data (WAV format preferred)
-        provider: "groq" for Groq Whisper API, "local" for faster-whisper
+        provider: "groq" for Groq Whisper API, "local" for faster-whisper, "elevenlabs" for ElevenLabs Scribe
         model: Model name (for local: tiny, base, small, medium, large)
         
     Returns:
@@ -56,6 +56,8 @@ async def transcribe_audio(
         return await _transcribe_groq(audio_bytes)
     elif provider == "local":
         return await _transcribe_local(audio_bytes, model or "base")
+    elif provider == "elevenlabs":
+        return await _transcribe_elevenlabs(audio_bytes)
     else:
         raise STTError(f"Unknown STT provider: {provider}", "bad_request")
 
@@ -189,3 +191,54 @@ async def _transcribe_local(audio_bytes: bytes, model: str) -> STTResult:
         return await loop.run_in_executor(None, _transcribe_sync)
     except Exception as e:
         raise STTError(f"Local transcription failed: {e}", "server_error") from e
+
+
+async def _transcribe_elevenlabs(audio_bytes: bytes) -> STTResult:
+    """Transcribe using ElevenLabs Speech-to-Text API."""
+    if not settings.elevenlabs_api_key:
+        raise STTError("ElevenLabs API key not configured", "auth")
+    
+    url = "https://api.elevenlabs.io/v1/speech-to-text"
+    headers = {"xi-api-key": settings.elevenlabs_api_key}
+    
+    # Prepare multipart form data
+    files = {
+        "file": ("audio.wav", audio_bytes, "audio/wav"),
+        "model_id": (None, "scribe_v2"),
+    }
+    
+    timeout = httpx.Timeout(30.0, connect=10.0)
+    
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        try:
+            response = await client.post(url, headers=headers, files=files)
+        except httpx.TimeoutException as e:
+            raise STTError("ElevenLabs API timeout", "timeout") from e
+        except httpx.RequestError as e:
+            raise STTError(f"ElevenLabs API request failed: {e}", "server_error") from e
+    
+    if response.status_code == 401:
+        raise STTError("ElevenLabs API authentication failed", "auth")
+    elif response.status_code == 429:
+        raise STTError("ElevenLabs API rate limit exceeded", "rate_limit")
+    elif response.status_code >= 500:
+        raise STTError(f"ElevenLabs API server error: {response.status_code}", "server_error")
+    elif response.status_code != 200:
+        raise STTError(f"ElevenLabs API error: {response.text}", "bad_request")
+    
+    try:
+        data = response.json()
+    except Exception as e:
+        raise STTError(f"Invalid JSON response: {e}", "server_error") from e
+    
+    text = data.get("text", "").strip()
+    language = data.get("language_code", "en")
+    confidence = data.get("language_probability", 0.9)
+    duration_ms = int(data.get("audio_duration_secs", 0) * 1000)
+    
+    return STTResult(
+        text=text,
+        language=language,
+        confidence=confidence,
+        duration_ms=duration_ms,
+    )
