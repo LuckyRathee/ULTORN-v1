@@ -10,7 +10,7 @@
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/badge/License-All_Rights_Reserved-red?style=for-the-badge)](LICENSE)
 
 [**Explore Documentation**](docs/README.md) • [**Quick Start**](#-quick-start) • [**Architecture**](#-architecture--pipeline) • [**Roadmap**](#-the-8-level-agentic-roadmap) • [**Developer Guide**](docs/06_DEVELOPER_CONTRIBUTION_GUIDE.md)
 
@@ -302,11 +302,11 @@ ULTORN-v1/
 
 ---
 
-## 🛡️ License & Contributing
+## 🛡️ Ownership & License
 
-Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
+Copyright (c) 2026 **Lucky Rathee**. All Rights Reserved.
 
-Contributions, issue reports, and feature requests are welcome! Feel free to fork the repository and submit a pull request.
+This repository is a **personal software project**. Unauthorized copying, distribution, modification, public display, or commercial use is strictly prohibited. See [`LICENSE`](LICENSE) for details.
 
 ---
 

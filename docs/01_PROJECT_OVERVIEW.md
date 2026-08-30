@@ -50,7 +50,7 @@ To understand Ultron V1 without a technology background, think of it as a team o
 3. **Enterprise 7-Stage State Machine**:
    - Instead of messy, unpredictable code, every single request follows a strict 7-stage assembly line (`LISTENING ➔ TRANSCRIBING ➔ INTENT ➔ CONFIRMING ➔ EXECUTING ➔ RESPONDING ➔ TTS`). If anything ever goes wrong, Ultron pinpoints the exact millisecond and reason.
 
-4. **100% Open Source Commitment**:
+4. **Personal Privacy & Control Commitment**:
    - Ultron V1 is designed to run locally on your machine using standard, open web technologies without being locked into single proprietary vendors.
 
 5. **Responsive Sci-Fi Cockpit Dashboard**:
