@@ -5,11 +5,11 @@ import base64
 import pytest
 from pathlib import Path
 
-from jarvis.stages.audio_input import handle_audio_input
-from jarvis.stages.transcription import handle_transcription
-from jarvis.state.states import StateData, PipelineState
-from jarvis.schemas.pipeline import PipelineRun
-from jarvis.schemas.api import AudioInputRequest
+from ultron.stages.audio_input import handle_audio_input
+from ultron.stages.transcription import handle_transcription
+from ultron.state.states import StateData, PipelineState
+from ultron.schemas.pipeline import PipelineRun
+from ultron.schemas.api import AudioInputRequest
 
 
 @pytest.fixture

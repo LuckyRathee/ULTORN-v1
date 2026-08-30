@@ -1,5 +1,5 @@
 [project]
-name = "jarvis-2.0"
+name = "ultron"
 version = "1.0.0"
 description = "Production-grade voice/multimodal AI assistant with explicit 5-stage pipeline"
 readme = "README.md"
@@ -64,7 +64,7 @@ python_functions = ["test_*"]
 addopts = "-v --tb=short"
 
 [tool.coverage.run]
-source = ["src/jarvis"]
+source = ["src/ultron"]
 omit = ["tests/*", "*/__pycache__/*"]
 
 [tool.coverage.report]

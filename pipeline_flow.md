@@ -1,6 +1,6 @@
-# Jarvis 2.0 - How It Works & Diagnostic Flowchart
+# Ultron V1 - How It Works & Diagnostic Flowchart
 
-This document details the step-by-step data flow of the Jarvis 2.0 voice assistant pipeline. Use this guide to easily visualize how your voice query travels from the browser to the backend, and how to pinpoint exactly where an error might be occurring.
+This document details the step-by-step data flow of the Ultron V1 voice assistant pipeline. Use this guide to easily visualize how your voice query travels from the browser to the backend, and how to pinpoint exactly where an error might be occurring.
 
 ---
 

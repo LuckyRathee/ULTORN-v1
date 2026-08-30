@@ -5,8 +5,8 @@ import pytest
 from uuid import UUID, uuid4
 from datetime import datetime
 
-from jarvis.persistence.supabase import SupabaseClient, log_pipeline_run
-from jarvis.schemas.pipeline import PipelineRun, StageResult, StageStatus
+from ultron.persistence.supabase import SupabaseClient, log_pipeline_run
+from ultron.schemas.pipeline import PipelineRun, StageResult, StageStatus
 
 
 @pytest.fixture

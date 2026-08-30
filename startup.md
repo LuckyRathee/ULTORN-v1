@@ -1,6 +1,6 @@
-# Jarvis 2.0 - Quick Startup & Setup Guide
+# Ultron V1 - Quick Startup & Setup Guide
 
-This guide details the complete steps to configure, install, and run both the backend (FastAPI) and frontend (Next.js) servers for the Jarvis 2.0 voice assistant on Windows.
+This guide details the complete steps to configure, install, and run both the backend (FastAPI) and frontend (Next.js) servers for the Ultron V1 voice assistant on Windows.
 
 ---
 
@@ -20,7 +20,7 @@ Before starting, ensure you have the following installed globally:
 
 ## 🛠️ Step 1: Backend Setup & Installation
 
-Open a **PowerShell** window at the root of the project (`D:\GitRepo\Jarvis 2.0`):
+Open a **PowerShell** window at the root of the project (`D:\GitRepo\Ultron V1`):
 
 1. **Create the Python Virtual Environment:**
    ```powershell
@@ -38,10 +38,10 @@ Open a **PowerShell** window at the root of the project (`D:\GitRepo\Jarvis 2.0`
    pip install -r requirements.txt
    ```
 
-   *Note: Jarvis 2.0 uses native file header signature checking to validate audio formats, so no external DLL libraries (like `libmagic` or `python-magic-bin`) are required on Windows.*
+   *Note: Ultron V1 uses native file header signature checking to validate audio formats, so no external DLL libraries (like `libmagic` or `python-magic-bin`) are required on Windows.*
 
 4. **Apply Supabase Migrations:**
-   Copy the contents of [001_create_pipeline_runs.sql](file:///D:/GitRepo/Jarvis%202.0/supabase/migrations/001_create_pipeline_runs.sql) and run it inside the **SQL Editor** of your Supabase dashboard to generate the log tables.
+   Copy the contents of [001_create_pipeline_runs.sql](file:///D:/GitRepo/ultron%202.0/supabase/migrations/001_create_pipeline_runs.sql) and run it inside the **SQL Editor** of your Supabase dashboard to generate the log tables.
 
 ---
 
@@ -50,7 +50,7 @@ Open a **PowerShell** window at the root of the project (`D:\GitRepo\Jarvis 2.0`
 There are two ways to run the servers: **Method A (Automatic launcher)** or **Method B (Manual terminals)**.
 
 ### Method A: One-Click Startup (Recommended)
-Simply double-click the **[run_jarvis.bat](file:///D:/GitRepo/Jarvis%202.0/run_jarvis.bat)** script in your project root folder:
+Simply double-click the **[run_ultron.bat](file:///D:/GitRepo/ultron%202.0/run_ultron.bat)** script in your project root folder:
 * It will open two separate terminal windows.
 * It starts the backend (port `8000`) and the frontend (port `2311`).
 * It automatically waits 3 seconds and opens `http://localhost:2311` in your default web browser.
@@ -67,7 +67,7 @@ Make sure the `.venv` is activated and use the `--app-dir` parameter:
 .\.venv\Scripts\Activate.ps1
 
 # 2. Launch FastAPI with App Directory
-uvicorn --app-dir src jarvis.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn --app-dir src ultron.main:app --reload --host 0.0.0.0 --port 8000
 ```
 * **Backend Endpoint:** `http://localhost:8000`
 * **Health Check:** `http://localhost:8000/health`
@@ -88,9 +88,9 @@ npm run dev
 
 ## 📁 Project Directory Links
 
-* [One-Click Startup Script](file:///D:/GitRepo/Jarvis%202.0/run_jarvis.bat)
-* [Backend Entry Point (FastAPI)](file:///D:/GitRepo/Jarvis%202.0/src/jarvis/main.py)
-* [Frontend App Component](file:///D:/GitRepo/Jarvis%202.0/frontend/src/app/page.tsx)
-* [Backend Env Config File](file:///D:/GitRepo/Jarvis%202.0/.env)
-* [Backend Migration Script](file:///D:/GitRepo/Jarvis%202.0/supabase/migrations/001_create_pipeline_runs.sql)
-* [Setup & API Summary](file:///D:/GitRepo/Jarvis%202.0/summary.md)
+* [One-Click Startup Script](file:///D:/GitRepo/ultron%202.0/run_ultron.bat)
+* [Backend Entry Point (FastAPI)](file:///D:/GitRepo/ultron%202.0/src/ultron/main.py)
+* [Frontend App Component](file:///D:/GitRepo/ultron%202.0/frontend/src/app/page.tsx)
+* [Backend Env Config File](file:///D:/GitRepo/ultron%202.0/.env)
+* [Backend Migration Script](file:///D:/GitRepo/ultron%202.0/supabase/migrations/001_create_pipeline_runs.sql)
+* [Setup & API Summary](file:///D:/GitRepo/ultron%202.0/summary.md)

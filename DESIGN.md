@@ -1,4 +1,4 @@
-# Design System: Jarvis 2.0 Sci-Fi HUD Dashboard
+# Design System: Ultron V1 Sci-Fi HUD Dashboard
 
 ## 1. Visual Theme & Atmosphere
 A high-density, asymmetric tactical cockpit interface inspired by sci-fi holographic head-up displays (HUDs). The design features micro-borders, glowing telemetry overlays, and real-time interactive widgets. The mood is highly technical and precise, but polished with premium, ultra-fine typography and spring-physics active states.

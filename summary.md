@@ -1,6 +1,6 @@
-# Jarvis 2.0 - Project & Pipeline Setup Summary
+# Ultron V1 - Project & Pipeline Setup Summary
 
-This document summarizes the current status, configurations, and fixes implemented for the **Jarvis 2.0 Voice Assistant Pipeline** (Backend FastAPI + Next.js Frontend).
+This document summarizes the current status, configurations, and fixes implemented for the **Ultron V1 Voice Assistant Pipeline** (Backend FastAPI + Next.js Frontend).
 
 ---
 
@@ -45,7 +45,7 @@ The following APIs, security settings, and providers are fully configured in the
 * **Real-time Microphone Volume Metering:** Implemented browser-native Web Audio API (`AudioContext` and `AnalyserNode`) to measure mic loudness in real time:
   * **Dynamic Visualizer Waveform:** Visualizer bars bounce in perfect sync with your live voice frequencies.
   * **Dynamic Mic Button:** The microphone button scales up to `1.2x` and pulses its red glow shadow dynamically matching your voice level.
-* **Startup Greeting Trigger:** Added a mount handler to load and announce Jarvis's welcome greeting on page startup.
+* **Startup Greeting Trigger:** Added a mount handler to load and announce ultron's welcome greeting on page startup.
 * **Autoplay Protection:** Implemented cross-browser autoplay exception handling to prevent audio crashes.
 
 ---

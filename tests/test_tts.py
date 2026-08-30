@@ -9,8 +9,8 @@ from unittest.mock import AsyncMock, patch, MagicMock
 import httpx
 import base64
 
-from src.jarvis.services.tts import synthesize_speech, TTSError
-from src.jarvis.config import settings
+from src.ultron.services.tts import synthesize_speech, TTSError
+from src.ultron.config import settings
 
 
 class TestTTSService:
@@ -19,7 +19,7 @@ class TestTTSService:
     @pytest.fixture
     def mock_httpx_client(self):
         """Mock httpx.AsyncClient."""
-        with patch("src.jarvis.services.tts.httpx.AsyncClient") as mock_client:
+        with patch("src.ultron.services.tts.httpx.AsyncClient") as mock_client:
             yield mock_client
 
     @pytest.mark.asyncio

@@ -1,4 +1,4 @@
-# Jarvis 2.0 - Voice Assistant Pipeline
+# Ultron V1 - Voice Assistant Pipeline
 
 A production-ready, async-first voice assistant backend built with FastAPI, featuring a typed state machine architecture, discriminated union intent routing, and comprehensive observability via Supabase logging.
 
@@ -63,7 +63,7 @@ Intent = Union[
 
 ### Why Typed Errors?
 ```python
-class WeatherError(JarvisError):
+class WeatherError(ultronError):
     error_type: Literal["timeout", "rate_limit", "server_error", "auth", "bad_params", "not_found", "unknown"]
 ```
 - **Client handles explicitly**: `match error.error_type: case "timeout": retry()`
@@ -98,7 +98,7 @@ class WeatherError(JarvisError):
 ```bash
 # Clone and enter project
 git clone <repo-url>
-cd jarvis-2.0
+cd ultron-v1
 
 # Create virtual environment
 python -m venv .venv
@@ -164,7 +164,7 @@ ELEVENLABS_VOICE_ID=your-voice-id
 ### Start Server
 
 ```bash
-uvicorn jarvis.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn ultron.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ### Verify
@@ -280,7 +280,7 @@ pytest tests/test_supabase_logging.py -v
 pytest tests/test_e2e_pipeline.py -v
 
 # With coverage
-pytest tests/ --cov=src/jarvis --cov-report=html
+pytest tests/ --cov=src/ultron --cov-report=html
 ```
 
 ### Test Coverage
@@ -302,10 +302,10 @@ pytest tests/ --cov=src/jarvis --cov-report=html
 ## 📁 Project Structure
 
 ```
-jarvis-2.0/
+ultron-v1/
 ├── docs/
 │   └── architecture.md          # Detailed architecture document
-├── src/jarvis/
+├── src/ultron/
 │   ├── main.py                  # FastAPI app entry point
 │   ├── config.py                # Pydantic settings
 │   ├── schemas/

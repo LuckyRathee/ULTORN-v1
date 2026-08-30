@@ -9,8 +9,8 @@ from unittest.mock import AsyncMock, patch, MagicMock
 import httpx
 from datetime import datetime, timezone
 
-from src.jarvis.services.tasks import create_task, list_tasks, TaskError
-from src.jarvis.config import settings
+from src.ultron.services.tasks import create_task, list_tasks, TaskError
+from src.ultron.config import settings
 
 
 class TestTasksService:
@@ -19,7 +19,7 @@ class TestTasksService:
     @pytest.fixture
     def mock_httpx_client(self):
         """Mock httpx.AsyncClient."""
-        with patch("src.jarvis.services.tasks.httpx.AsyncClient") as mock_client:
+        with patch("src.ultron.services.tasks.httpx.AsyncClient") as mock_client:
             yield mock_client
 
     @pytest.mark.asyncio

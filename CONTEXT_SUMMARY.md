@@ -1,4 +1,4 @@
-# Jarvis 2.0 - Context Summary for Continuation
+# Ultron V1 - Context Summary for Continuation
 
 ## Project Status: Architecture & Scaffold Complete ✅ | Phase 3 Integration Testing Complete ✅ | Phase 4 Intent Extraction Testing Complete ✅
 
@@ -13,27 +13,27 @@
 - `pyproject.toml` - Full config with ruff, mypy, pytest, coverage
 - `requirements.txt` - All dependencies
 - `.env.example` - All required environment variables
-- Complete folder structure under `src/jarvis/`
+- Complete folder structure under `src/ultron/`
 
 #### 3. Core Modules (All with function signatures + docstrings)
 
-**Schemas (`src/jarvis/schemas/`)**
+**Schemas (`src/ultron/schemas/`)**
 - `intent.py` - Discriminated union: WeatherIntent, CalendarCreateIntent, CalendarListIntent, TaskCreateIntent, TaskListIntent, UnknownIntent
 - `pipeline.py` - PipelineRun, StageResult, StageStatus for Supabase logging
 - `api.py` - Request/response models for endpoints
 
-**State Machine (`src/jarvis/state/`)**
+**State Machine (`src/ultron/state/`)**
 - `states.py` - PipelineState enum, StateData dataclass (data carrier between stages)
 - `machine.py` - StateMachine with explicit transitions, retry logic (tenacity), timeout handling
 
-**Pipeline Stages (`src/jarvis/stages/`)**
+**Pipeline Stages (`src/ultron/stages/`)**
 - `audio_input.py` - Stage 1: Validate/convert audio (base64/URL → WAV bytes) ✅ **Tested**
 - `transcription.py` - Stage 2: Whisper STT (Groq API or local faster-whisper)
 - `intent_extraction.py` - Stage 3: LLM function-calling → structured Intent
 - `action_execution.py` - Stage 4: Router → Weather/Calendar/Tasks services
 - `response.py` - Stage 5: Format text + optional TTS
 
-**Services (`src/jarvis/services/`)**
+**Services (`src/ultron/services/`)**
 - `stt.py` - Groq Whisper API + local faster-whisper fallback
 - `llm.py` - Groq Llama + Anthropic Claude with tool-calling (guaranteed JSON)
 - `tts.py` - ElevenLabs + Azure TTS (optional)
@@ -41,15 +41,15 @@
 - `calendar.py` - Google Calendar API (OAuth2, Priority 2)
 - `tasks.py` - Notion API (Priority 3)
 
-**Persistence (`src/jarvis/persistence/`)**
+**Persistence (`src/ultron/persistence/`)**
 - `supabase.py` - Pipeline run logging (one row per request, per-stage status/latency) ✅ **Tested**
 
-**Utils (`src/jarvis/utils/`)**
+**Utils (`src/ultron/utils/`)**
 - `errors.py` - Typed exception hierarchy with error codes & user messages
 - `audio.py` - Validation + ffmpeg conversion (cross-platform)
 - `logging.py` - structlog JSON lines setup
 
-**Main App (`src/jarvis/main.py`)**
+**Main App (`src/ultron/main.py`)**
 - FastAPI with lifespan, CORS, health endpoint
 - `/api/v1/process-audio` (base64/URL) and `/api/v1/process-audio/file` (multipart)
 - Pipeline run retrieval endpoints
@@ -119,10 +119,10 @@
 ## Key Files to Review Next
 
 1. **Start here**: `docs/architecture.md` - Understand the full design
-2. **Entry point**: `src/jarvis/main.py` - See how pipeline runs
-3. **State machine**: `src/jarvis/state/machine.py` - Core orchestration
-4. **Config**: `src/jarvis/config.py` - All settings
-5. **Errors**: `src/jarvis/utils/errors.py` - Error taxonomy
+2. **Entry point**: `src/ultron/main.py` - See how pipeline runs
+3. **State machine**: `src/ultron/state/machine.py` - Core orchestration
+4. **Config**: `src/ultron/config.py` - All settings
+5. **Errors**: `src/ultron/utils/errors.py` - Error taxonomy
 6. **New tests**: `tests/test_audio_transcription.py` - Stage 1-2 integration tests
 7. **New tests**: `tests/test_supabase_logging.py` - Persistence tests
 8. **Migration**: `supabase/migrations/001_create_pipeline_runs.sql` - Run in Supabase SQL Editor
@@ -139,7 +139,7 @@
 # Edit .env with your GROQ_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY, etc.
 
 # 3. Run server
-uvicorn jarvis.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn ultron.main:app --reload --host 0.0.0.0 --port 8000
 
 # 4. Test health
 curl http://localhost:8000/health

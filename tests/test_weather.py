@@ -8,8 +8,8 @@ import pytest
 from unittest.mock import AsyncMock, patch, MagicMock
 import httpx
 
-from src.jarvis.services.weather import get_weather, WeatherError, WeatherData
-from src.jarvis.config import settings
+from src.ultron.services.weather import get_weather, WeatherError, WeatherData
+from src.ultron.config import settings
 
 
 class TestWeatherService:
@@ -18,7 +18,7 @@ class TestWeatherService:
     @pytest.fixture
     def mock_httpx_client(self):
         """Mock httpx.AsyncClient."""
-        with patch("src.jarvis.services.weather.httpx.AsyncClient") as mock_client:
+        with patch("src.ultron.services.weather.httpx.AsyncClient") as mock_client:
             yield mock_client
 
     @pytest.mark.asyncio

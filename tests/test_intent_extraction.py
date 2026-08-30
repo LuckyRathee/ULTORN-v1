@@ -9,16 +9,16 @@ import pytest
 from pathlib import Path
 from datetime import datetime
 
-from jarvis.stages.intent_extraction import (
+from ultron.stages.intent_extraction import (
     handle_intent_extraction,
     _parse_and_validate_intent,
     _requires_confirmation,
     MIN_INTENT_CONFIDENCE,
 )
-from jarvis.services.llm import extract_intent, LLMExtractionError
-from jarvis.state.states import StateData, PipelineState
-from jarvis.schemas.pipeline import PipelineRun
-from jarvis.schemas.intent import (
+from ultron.services.llm import extract_intent, LLMExtractionError
+from ultron.state.states import StateData, PipelineState
+from ultron.schemas.pipeline import PipelineRun
+from ultron.schemas.intent import (
     Intent,
     IntentType,
     WeatherIntent,
@@ -28,7 +28,7 @@ from jarvis.schemas.intent import (
     TaskListIntent,
     UnknownIntent,
 )
-from jarvis.stages.intent_extraction import RetryableError, NonRetryableError
+from ultron.stages.intent_extraction import RetryableError, NonRetryableError
 
 
 # Load test fixtures
@@ -54,7 +54,7 @@ def state_with_transcript():
         run = PipelineRun(session_id="test-session", user_id="test-user")
         state = StateData(run=run)
         # Mock transcription result
-        from jarvis.schemas.api import TranscriptionResponse
+        from ultron.schemas.api import TranscriptionResponse
         state.transcription = TranscriptionResponse(
             text=transcript,
             confidence=0.9,
@@ -152,7 +152,7 @@ class TestIntentSchemaValidation:
     def test_discriminated_union_validation(self):
         """Test Pydantic discriminated union works."""
         from pydantic import TypeAdapter
-        from jarvis.schemas.intent import Intent
+        from ultron.schemas.intent import Intent
         
         # Use TypeAdapter for Union validation
         adapter = TypeAdapter(Intent)
@@ -300,7 +300,7 @@ class TestIntentExtractionStage:
         run = PipelineRun(session_id="test", user_id="test")
         state = StateData(run=run)
         state.current_state = PipelineState.EXTRACTING_INTENT
-        from jarvis.schemas.api import TranscriptionResponse
+        from ultron.schemas.api import TranscriptionResponse
         state.transcription = TranscriptionResponse(
             text="",
             confidence=0.9,
@@ -328,7 +328,7 @@ class TestConfidenceThreshold:
 
         # Mock extract_intent to return low confidence
         async def mock_extract_intent(*args, **kwargs):
-            from jarvis.services.llm import LLMExtractionResult
+            from ultron.services.llm import LLMExtractionResult
             return LLMExtractionResult(
                 intent_json={
                     "type": "weather",
@@ -339,7 +339,7 @@ class TestConfidenceThreshold:
                 latency_ms=100,
             )
 
-        monkeypatch.setattr("jarvis.stages.intent_extraction.extract_intent", mock_extract_intent)
+        monkeypatch.setattr("ultron.stages.intent_extraction.extract_intent", mock_extract_intent)
 
         with pytest.raises(NonRetryableError) as exc_info:
             await handle_intent_extraction(state)
@@ -355,7 +355,7 @@ class TestConfidenceThreshold:
         state = state_with_transcript("What's the weather in London?")
 
         async def mock_extract_intent(*args, **kwargs):
-            from jarvis.services.llm import LLMExtractionResult
+            from ultron.services.llm import LLMExtractionResult
             return LLMExtractionResult(
                 intent_json={
                     "type": "weather",
@@ -366,7 +366,7 @@ class TestConfidenceThreshold:
                 latency_ms=100,
             )
 
-        monkeypatch.setattr("jarvis.stages.intent_extraction.extract_intent", mock_extract_intent)
+        monkeypatch.setattr("ultron.stages.intent_extraction.extract_intent", mock_extract_intent)
 
         result = await handle_intent_extraction(state)
 
@@ -388,7 +388,7 @@ class TestLLMErrorHandling:
         async def mock_extract_intent(*args, **kwargs):
             raise LLMExtractionError("Timeout", "timeout")
 
-        monkeypatch.setattr("jarvis.stages.intent_extraction.extract_intent", mock_extract_intent)
+        monkeypatch.setattr("ultron.stages.intent_extraction.extract_intent", mock_extract_intent)
 
         with pytest.raises(RetryableError) as exc_info:
             await handle_intent_extraction(state)
@@ -403,7 +403,7 @@ class TestLLMErrorHandling:
         async def mock_extract_intent(*args, **kwargs):
             raise LLMExtractionError("Rate limited", "rate_limit")
 
-        monkeypatch.setattr("jarvis.stages.intent_extraction.extract_intent", mock_extract_intent)
+        monkeypatch.setattr("ultron.stages.intent_extraction.extract_intent", mock_extract_intent)
 
         with pytest.raises(RetryableError):
             await handle_intent_extraction(state)
@@ -416,7 +416,7 @@ class TestLLMErrorHandling:
         async def mock_extract_intent(*args, **kwargs):
             raise LLMExtractionError("Auth failed", "auth")
 
-        monkeypatch.setattr("jarvis.stages.intent_extraction.extract_intent", mock_extract_intent)
+        monkeypatch.setattr("ultron.stages.intent_extraction.extract_intent", mock_extract_intent)
 
         with pytest.raises(NonRetryableError) as exc_info:
             await handle_intent_extraction(state)
@@ -429,14 +429,14 @@ class TestLLMErrorHandling:
         state = state_with_transcript("What's the weather?")
 
         async def mock_extract_intent(*args, **kwargs):
-            from jarvis.services.llm import LLMExtractionResult
+            from ultron.services.llm import LLMExtractionResult
             return LLMExtractionResult(
                 intent_json="not a dict",  # Invalid - should be dict
                 raw_output="{}",
                 latency_ms=100,
             )
 
-        monkeypatch.setattr("jarvis.stages.intent_extraction.extract_intent", mock_extract_intent)
+        monkeypatch.setattr("ultron.stages.intent_extraction.extract_intent", mock_extract_intent)
 
         with pytest.raises(NonRetryableError) as exc_info:
             await handle_intent_extraction(state)
@@ -449,7 +449,7 @@ class TestLLMErrorHandling:
         state = state_with_transcript("What's the weather?")
 
         async def mock_extract_intent(*args, **kwargs):
-            from jarvis.services.llm import LLMExtractionResult
+            from ultron.services.llm import LLMExtractionResult
             return LLMExtractionResult(
                 intent_json={
                     "type": "weather",
@@ -460,7 +460,7 @@ class TestLLMErrorHandling:
                 latency_ms=100,
             )
 
-        monkeypatch.setattr("jarvis.stages.intent_extraction.extract_intent", mock_extract_intent)
+        monkeypatch.setattr("ultron.stages.intent_extraction.extract_intent", mock_extract_intent)
 
         with pytest.raises(NonRetryableError) as exc_info:
             await handle_intent_extraction(state)
@@ -544,13 +544,13 @@ class TestFullPipelineIntentExtraction:
     @pytest.mark.asyncio
     async def test_audio_to_intent_pipeline_mock(self, monkeypatch):
         """Test complete audio -> transcription -> intent pipeline with mocks."""
-        import jarvis.stages.audio_input as audio_input_module
-        import jarvis.stages.transcription as transcription_module
-        import jarvis.stages.intent_extraction as intent_extraction_module
-        from jarvis.schemas.api import AudioInputRequest, TranscriptionResponse
-        from jarvis.schemas.pipeline import PipelineRun
-        from jarvis.state.states import StateData, PipelineState
-        from jarvis.schemas.intent import WeatherIntent, IntentType
+        import ultron.stages.audio_input as audio_input_module
+        import ultron.stages.transcription as transcription_module
+        import ultron.stages.intent_extraction as intent_extraction_module
+        from ultron.schemas.api import AudioInputRequest, TranscriptionResponse
+        from ultron.schemas.pipeline import PipelineRun
+        from ultron.state.states import StateData, PipelineState
+        from ultron.schemas.intent import WeatherIntent, IntentType
         import base64
 
         # Create initial state with fake audio

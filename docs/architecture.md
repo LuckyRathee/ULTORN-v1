@@ -1,4 +1,4 @@
-# Jarvis 2.0 Architecture Document
+# Ultron V1 Architecture Document
 
 ## Overview
 Production-grade voice/multimodal AI assistant with explicit 5-stage pipeline, structured logging, and real API integrations.
@@ -54,7 +54,7 @@ Production-grade voice/multimodal AI assistant with explicit 5-stage pipeline, s
 
 ### 2.1 Intent Schema
 ```python
-# src/jarvis/schemas/intent.py
+# src/ultron/schemas/intent.py
 from enum import Enum
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
@@ -112,7 +112,7 @@ Intent = WeatherIntent | CalendarCreateIntent | CalendarListIntent | TaskCreateI
 
 ### 2.2 Pipeline Run Schema (Supabase Row)
 ```python
-# src/jarvis/schemas/pipeline.py
+# src/ultron/schemas/pipeline.py
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
 from datetime import datetime
@@ -149,7 +149,7 @@ class PipelineRun(BaseModel):
 
 ### 2.3 API Request/Response Schemas
 ```python
-# src/jarvis/schemas/api.py
+# src/ultron/schemas/api.py
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
 from uuid import UUID
@@ -194,11 +194,11 @@ class PipelineResponse(BaseModel):
 ## 3. Folder Structure
 
 ```
-jarvis-2.0/
+ultron-v1/
 ├── docs/
 │   └── architecture.md          # This file
 ├── src/
-│   └── jarvis/
+│   └── ultron/
 │       ├── __init__.py
 │       ├── main.py              # FastAPI app entry point
 │       ├── config.py            # Settings from .env (pydantic-settings)
@@ -327,18 +327,18 @@ NOTION_DATABASE_ID=xxx
 ## 7. Error Taxonomy
 
 ```python
-# src/jarvis/utils/errors.py
-class JarvisError(Exception):
+# src/ultron/utils/errors.py
+class ultronError(Exception):
     """Base exception with error code for client handling"""
     code: str
     user_message: str
 
-class AudioError(JarvisError): ...
-class TranscriptionError(JarvisError): ...
-class IntentExtractionError(JarvisError): ...
-class ActionExecutionError(JarvisError): ...
-class TTSError(JarvisError): ...
-class PipelineError(JarvisError): ...
+class AudioError(ultronError): ...
+class TranscriptionError(ultronError): ...
+class IntentExtractionError(ultronError): ...
+class ActionExecutionError(ultronError): ...
+class TTSError(ultronError): ...
+class PipelineError(ultronError): ...
 
 # Specific error codes:
 # AUDIO_NO_INPUT, AUDIO_INVALID_FORMAT, AUDIO_TOO_LARGE

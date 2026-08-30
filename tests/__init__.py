@@ -1,3 +1,3 @@
 """
-Test suite for Jarvis 2.0.
+Test suite for Ultron 2.0.
 """
