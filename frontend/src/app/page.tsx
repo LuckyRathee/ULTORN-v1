@@ -257,13 +257,19 @@ export default function ultronDashboard() {
       });
 
       if (!res.ok) {
-        throw new Error(`Server returned ${res.status}`);
+        throw new Error(`Server returned status ${res.status}`);
       }
 
       const data = await res.json();
       setCurrentRun(data);
-      setStatus(data.audio_url ? "playing" : "idle");
-      soundSynth.playSuccessBeep();
+      if (data.status === "failed" || data.status === "FAILED") {
+        setStatus("error");
+        setErrorMessage(data.error || data.action_result?.error || "Pipeline run failed.");
+        soundSynth.playErrorAlert();
+      } else {
+        setStatus(data.audio_url ? "playing" : "idle");
+        soundSynth.playSuccessBeep();
+      }
       fetchHistory();
     } catch (err: any) {
       console.error("Text command failed:", err);
@@ -279,28 +285,40 @@ export default function ultronDashboard() {
     setErrorMessage("");
 
     try {
-      const reader = new FileReader();
-      reader.readAsDataURL(audioBlob);
+      const base64Audio = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (reader.result) {
+            resolve((reader.result as string).split(",")[1]);
+          } else {
+            reject(new Error("Failed to read recorded audio blob."));
+          }
+        };
+        reader.onerror = () => reject(new Error("Error reading audio recording."));
+        reader.readAsDataURL(audioBlob);
+      });
 
-      reader.onloadend = async () => {
-        const base64Audio = (reader.result as string).split(",")[1];
+      const res = await fetch(`${backendUrl}/api/v1/process-audio`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ audio_base64: base64Audio, session_id: sessionId }),
+      });
 
-        const res = await fetch(`${backendUrl}/api/v1/process-audio`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ audio_base64: base64Audio, session_id: sessionId }),
-        });
+      if (!res.ok) {
+        throw new Error(`Pipeline server error: ${res.status}`);
+      }
 
-        if (!res.ok) {
-          throw new Error(`Pipeline returned status ${res.status}`);
-        }
-
-        const data = await res.json();
-        setCurrentRun(data);
+      const data = await res.json();
+      setCurrentRun(data);
+      if (data.status === "failed" || data.status === "FAILED") {
+        setStatus("error");
+        setErrorMessage(data.error || data.action_result?.error || "Audio pipeline execution failed.");
+        soundSynth.playErrorAlert();
+      } else {
         setStatus(data.audio_url ? "playing" : "idle");
         soundSynth.playSuccessBeep();
-        fetchHistory();
-      };
+      }
+      fetchHistory();
     } catch (err: any) {
       console.error("Audio processing failed:", err);
       setErrorMessage(err.message || "Failed to process audio pipeline.");
