@@ -48,8 +48,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md font-mono select-none">
-      <div className="w-full max-w-md rounded-xl hud-card p-6 border border-cyan-500/40 shadow-2xl relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md font-mono select-none">
+      <div className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-xl hud-card p-4 sm:p-6 border border-cyan-500/40 shadow-2xl relative">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
           <div className="flex items-center gap-2">

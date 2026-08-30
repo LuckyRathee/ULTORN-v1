@@ -75,9 +75,9 @@ export const ConsoleInput: React.FC<ConsoleInputProps> = ({
 
       {/* Main Console Input Bar */}
       <form onSubmit={handleSubmit} className="relative flex items-center w-full">
-        <div className="absolute left-4 flex items-center gap-2 text-cyan-400 pointer-events-none">
-          <Sparkles className="w-4 h-4 animate-pulse" />
-          <span className="font-mono text-xs text-slate-500">ultron&gt;</span>
+        <div className="absolute left-3 sm:left-4 flex items-center gap-1.5 sm:gap-2 text-cyan-400 pointer-events-none">
+          <Sparkles className="w-4 h-4 animate-pulse shrink-0" />
+          <span className="font-mono text-xs text-slate-500 hidden sm:inline">ultron&gt;</span>
         </div>
 
         <input
@@ -85,9 +85,9 @@ export const ConsoleInput: React.FC<ConsoleInputProps> = ({
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter voice prompt or type command... (Ctrl+K to focus)"
+          placeholder="Enter command... (Ctrl+K)"
           disabled={isProcessing}
-          className="w-full pl-28 pr-32 py-3.5 rounded-xl hud-card border border-slate-800 text-sm font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/40 transition-all duration-200"
+          className="w-full pl-9 sm:pl-28 pr-20 sm:pr-32 py-3 sm:py-3.5 rounded-xl hud-card border border-slate-800 text-xs sm:text-sm font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/40 transition-all duration-200"
         />
 
         {/* Right Action & Wake Word Badges */}

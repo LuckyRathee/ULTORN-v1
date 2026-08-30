@@ -175,8 +175,8 @@ export const PipelineTracker: React.FC<PipelineTrackerProps> = ({
 
       {/* JSON Payload Inspector Modal */}
       {selectedStage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-          <div className="w-full max-w-xl rounded-xl hud-card p-5 border border-cyan-500/40 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md">
+          <div className="w-full max-w-xl max-h-[85vh] overflow-y-auto rounded-xl hud-card p-4 sm:p-5 border border-cyan-500/40 shadow-2xl relative">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
               <div className="flex items-center gap-2 font-mono">
                 <Code className="w-5 h-5 text-cyan-400" />

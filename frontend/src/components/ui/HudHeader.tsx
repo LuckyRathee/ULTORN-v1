@@ -94,20 +94,20 @@ export const HudHeader: React.FC<HudHeaderProps> = ({
   }, [backendUrl]);
 
   return (
-    <header className="relative z-20 w-full px-4 py-3 border-b border-slate-800/80 bg-[#030712]/90 backdrop-blur-xl flex items-center justify-between gap-4 select-none">
+    <header className="relative z-20 w-full px-3 sm:px-6 py-2.5 sm:py-3 border-b border-slate-800/80 bg-[#030712]/90 backdrop-blur-xl flex items-center justify-between gap-2 sm:gap-4 select-none">
       {/* Brand Title & System Badge */}
-      <div className="flex items-center gap-3">
-        <div className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-cyan-950/40 border border-cyan-500/40 glow-cyan">
-          <Cpu className="w-5 h-5 text-cyan-400 animate-pulse" />
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-cyan-950/40 border border-cyan-500/40 glow-cyan shrink-0">
+          <Cpu className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 animate-pulse" />
           <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
         </div>
 
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-lg font-bold tracking-widest text-white uppercase font-hud">
-              ultron <span className="text-cyan-400 text-glow-cyan">2.0</span>
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <h1 className="text-base sm:text-lg font-bold tracking-widest text-white uppercase font-hud">
+              ULTRON <span className="text-cyan-400 text-glow-cyan">V1</span>
             </h1>
-            <span className="px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded bg-cyan-950/60 border border-cyan-500/30 text-cyan-400">
+            <span className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded bg-cyan-950/60 border border-cyan-500/30 text-cyan-400">
               HUD COCKPIT
             </span>
           </div>

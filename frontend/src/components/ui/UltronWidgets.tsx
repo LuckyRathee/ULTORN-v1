@@ -109,13 +109,13 @@ export const UltronWidgets: React.FC<UltronWidgetsProps> = ({
   return (
     <div className="w-full my-4 select-none">
       {/* Tab Navigation */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-2 mb-4 font-mono text-xs overflow-x-auto scrollbar-none">
+      <div className="flex items-center gap-1.5 sm:gap-2 border-b border-slate-800 pb-2 mb-4 font-mono text-xs overflow-x-auto scrollbar-none touch-pan-x w-full">
         <button
           onClick={() => {
             soundSynth.playClick();
             setActiveTab("overview");
           }}
-          className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all ${
+          className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shrink-0 ${
             activeTab === "overview"
               ? "bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 glow-cyan"
               : "text-slate-400 hover:text-slate-200"
@@ -130,7 +130,7 @@ export const UltronWidgets: React.FC<UltronWidgetsProps> = ({
             soundSynth.playClick();
             setActiveTab("weather");
           }}
-          className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all ${
+          className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shrink-0 ${
             activeTab === "weather"
               ? "bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 glow-cyan"
               : "text-slate-400 hover:text-slate-200"
@@ -145,7 +145,7 @@ export const UltronWidgets: React.FC<UltronWidgetsProps> = ({
             soundSynth.playClick();
             setActiveTab("calendar");
           }}
-          className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all ${
+          className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shrink-0 ${
             activeTab === "calendar"
               ? "bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 glow-cyan"
               : "text-slate-400 hover:text-slate-200"
@@ -160,7 +160,7 @@ export const UltronWidgets: React.FC<UltronWidgetsProps> = ({
             soundSynth.playClick();
             setActiveTab("tasks");
           }}
-          className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all ${
+          className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shrink-0 ${
             activeTab === "tasks"
               ? "bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 glow-cyan"
               : "text-slate-400 hover:text-slate-200"
@@ -175,7 +175,7 @@ export const UltronWidgets: React.FC<UltronWidgetsProps> = ({
             soundSynth.playClick();
             setActiveTab("system");
           }}
-          className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all ${
+          className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shrink-0 ${
             activeTab === "system"
               ? "bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 glow-cyan"
               : "text-slate-400 hover:text-slate-200"
