@@ -1,426 +1,251 @@
-# Ultron V1 - Voice Assistant Pipeline
+# ULTRON V1 🤖⚡
 
-A production-ready, async-first voice assistant backend built with FastAPI, featuring a typed state machine architecture, discriminated union intent routing, and comprehensive observability via Supabase logging.
+> **An Autonomous, Multi-Modal & Screen-Aware Voice AI Agent Engine**  
+> *Built with FastAPI, Next.js 16, Pydantic Discriminated Unions, 7-Stage State Machine, and Supabase Telemetry.*
+
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.109.0-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.3-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.style=for-the-badge)](LICENSE)
+
+---
+
+## 💡 What is Ultron V1?
+
+**Ultron V1** (formerly *Jarvis 2.0*) is a production-grade, voice-first autonomous AI assistant. Unlike simple text-only chatbots, Ultron listens to spoken audio or typed prompts, extracts structured intent using function-calling LLMs, and **takes real action** across external services—fetching real-time weather forecasts, managing Notion task databases, and scheduling Google Calendar agendas, before speaking back to the user in a natural human voice.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    ULTRON V1 VOICE PIPELINE                 │
+│                                                             │
+│ 🎙️ Voice Input ➔ 👂 STT ➔ 🧠 Intent ➔ ✋ Action ➔ 🗣️ TTS   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📚 Project Documentation Hub
+
+For detailed guides tailored for both technical and non-technical readers, explore the **[`docs/`](file:///d:/GitRepo/Jarvis%202.0/docs/README.md)** folder:
+
+- 📄 **[Project Overview](file:///d:/GitRepo/Jarvis%202.0/docs/01_PROJECT_OVERVIEW.md)**: Conceptual summary with plain English human metaphors.
+- 📜 **[Past Versions & Evolution](file:///d:/GitRepo/Jarvis%202.0/docs/02_PAST_VERSIONS_AND_EVOLUTION.md)**: Story of Jarvis 2.0 ➔ Ultron V1 & technical lessons.
+- 🏗️ **[Current Architecture](file:///d:/GitRepo/Jarvis%202.0/docs/03_CURRENT_ARCHITECTURE.md)**: 7-Stage State Machine pipeline & tech stack breakdown.
+- 🚀 **[Future Roadmap](file:///d:/GitRepo/Jarvis%202.0/docs/04_FUTURE_ROADMAP.md)**: The 8-Level Agentic Capability Ladder (Screen Vision, ReAct Planning, OS RPA).
+- 🛠️ **[Non-Tech User Guide](file:///d:/GitRepo/Jarvis%202.0/docs/05_NON_TECH_USER_GUIDE.md)**: Simple step-by-step launch & voice prompt guide.
+- 💻 **[Developer & File System Guide](file:///d:/GitRepo/Jarvis%202.0/docs/06_DEVELOPER_CONTRIBUTION_GUIDE.md)**: Directory map, request traces, & extension recipes.
+
+---
 
 ## 🏗️ Architecture Overview
 
 ```mermaid
 stateDiagram-v2
     [*] --> LISTENING
-    LISTENING --> TRANSCRIBING: Audio validated
-    TRANSCRIBING --> EXTRACTING_INTENT: Speech transcribed
-    EXTRACTING_INTENT --> CONFIRMING_INTENT: Intent extracted (if needs confirmation)
-    EXTRACTING_INTENT --> EXECUTING: Intent extracted (no confirmation needed)
+    LISTENING --> TRANSCRIBING: Audio validated & converted (FFmpeg WebM➔WAV)
+    TRANSCRIBING --> EXTRACTING_INTENT: Speech transcribed (ElevenLabs Scribe / Whisper)
+    EXTRACTING_INTENT --> CONFIRMING_INTENT: Intent extracted (if confirmation needed)
+    EXTRACTING_INTENT --> EXECUTING: Intent extracted (safe action)
     CONFIRMING_INTENT --> EXECUTING: User confirmed
     CONFIRMING_INTENT --> FAILED: User rejected
-    EXECUTING --> RESPONDING: Action completed
+    EXECUTING --> RESPONDING: Action completed (Weather / Notion / Calendar)
     EXECUTING --> FAILED: Action failed
-    RESPONDING --> DONE: Response formatted
-    RESPONDING --> FAILED: Response failed
+    RESPONDING --> TTS: Text formatted
+    TTS --> DONE: Audio synthesized & returned
     FAILED --> [*]
     DONE --> [*]
 ```
 
-### Pipeline Stages
+### 7-Stage Pipeline Breakdown
 
-| Stage | State | Description |
-|-------|-------|-------------|
-| 1 | `LISTENING` → `TRANSCRIBING` | Validate/convert audio (base64/URL → WAV bytes) |
-| 2 | `TRANSCRIBING` → `EXTRACTING_INTENT` | Whisper STT (Groq API or local faster-whisper) |
-| 3 | `EXTRACTING_INTENT` → `CONFIRMING_INTENT`/`EXECUTING` | LLM function-calling → structured Intent |
-| 4 | `CONFIRMING_INTENT` → `EXECUTING` | Optional user confirmation for mutating actions |
-| 5 | `EXECUTING` → `RESPONDING` | Route to Weather/Calendar/Tasks services |
-| 6 | `RESPONDING` → `DONE` | Format text + optional TTS (ElevenLabs/Azure) |
+| Stage | State | Function | Primary Tech |
+|-------|-------|----------|--------------|
+| **1** | `LISTENING` ➔ `TRANSCRIBING` | Validates audio header & converts WebM bytes to WAV | Native header check + FFmpeg |
+| **2** | `TRANSCRIBING` ➔ `EXTRACTING_INTENT` | Transcribes speech to clean text | ElevenLabs Scribe v2 / Groq Whisper |
+| **3** | `EXTRACTING_INTENT` ➔ `EXECUTING` | Function-calling LLM extracts typed intent schema | Groq Qwen 3.6 / Llama 3 |
+| **4** | `CONFIRMING_INTENT` ➔ `EXECUTING` | Confidence threshold & confirmation check | `src/ultron/stages/` |
+| **5** | `EXECUTING` ➔ `RESPONDING` | Router executes API client (Weather, Notion, Calendar) | `src/ultron/services/` |
+| **6** | `RESPONDING` ➔ `TTS` | Formats natural response text | `src/ultron/stages/response.py` |
+| **7** | `TTS` ➔ `DONE` | Synthesizes response into realistic speech | ElevenLabs Multilingual v2 |
 
-## 🎯 Design Decisions
+---
 
-### Why Explicit State Machine?
-- **Observable**: Every request traces through named states
-- **Testable**: Each stage is a pure async function `StateData → StateData`
-- **Debuggable**: Full stage history with latency per request
-- **No implicit control flow**: Transitions are explicit, not hidden in if/elif chains
+## 🎯 Key Design Principles
 
-### Why Discriminated Union for Intent?
-```python
-# Type-safe routing - no stringly-typed comparisons
-Intent = Union[
-    WeatherIntent,      # type="weather"
-    CalendarCreateIntent,  # type="calendar_create"
-    CalendarListIntent,    # type="calendar_list"
-    TaskCreateIntent,      # type="task_create"
-    TaskListIntent,        # type="task_list"
-    UnknownIntent          # type="unknown"
-]
-```
-- **Exhaustiveness checking**: MyPy catches missing intent handlers
-- **IDE autocomplete**: Full type hints for each intent's fields
-- **No runtime `if intent.type == "weather"`**: Pattern matching on type field
+* **Explicit State Machine**: No hidden `if/elif` callback chains. Every request is an observable sequence of pure async stage functions.
+* **Discriminated Union Intent Types**: Type-safe routing using Pydantic discriminated unions (`WeatherIntent`, `TaskCreateIntent`, `CalendarCreateIntent`).
+* **Tool-Calling Enforcement**: Schema enforcement at the LLM API level ensures 100% valid JSON intent parsing without prompt-and-hope regex.
+* **Typed Exception Hierarchy**: All service connectors inherit from `UltronError` with explicit error codes (`timeout`, `auth`, `rate_limit`, `bad_params`).
+* **Full Per-Stage Observability**: Every request traces latency per stage into Supabase DB for instant bottleneck analysis.
 
-### Why Tool-Calling for LLM?
-- **Guaranteed valid JSON**: Function calling enforces schema at API level
-- **No prompt-and-hope**: Structured output without regex parsing
-- **Type-safe**: Pydantic models map directly to function schemas
-
-### Why Typed Errors?
-```python
-class WeatherError(ultronError):
-    error_type: Literal["timeout", "rate_limit", "server_error", "auth", "bad_params", "not_found", "unknown"]
-```
-- **Client handles explicitly**: `match error.error_type: case "timeout": retry()`
-- **User-friendly messages**: Each error has `user_message` for display
-- **Observability**: Error types logged per-stage in Supabase
-
-### Why Supabase Per-Request Row?
-- **Full traceability**: One row = complete request lifecycle
-- **Replay capability**: Reconstruct any request from DB
-- **Latency analysis**: Per-stage timing for bottleneck detection
-- **Audit trail**: Who asked what, when, with what result
-
-### Why Async Throughout?
-- **FastAPI + async clients**: No blocking I/O on external APIs
-- **Concurrent requests**: Handle multiple voice queries simultaneously
-- **Timeout control**: Per-request and per-stage timeouts via `httpx.Timeout`
-
-### Why Cross-Platform Only?
-- **No `os.startfile`**, `pywinauto`, hardcoded paths
-- **Docker-ready**: Runs identically on Linux/macOS/Windows
-- **CI/CD friendly**: Tests run in GitHub Actions without Windows runners
+---
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.11+
-- Supabase account (for logging)
-- API keys for: Groq (STT/LLM), WeatherAPI.com, Google Calendar, Notion, ElevenLabs (optional)
+### 1. Prerequisites
+- **Python**: 3.11+
+- **Node.js**: 18+ & NPM
+- **FFmpeg**: Required for audio format conversion
 
-### Installation
+### 2. Environment Setup
 
 ```bash
-# Clone and enter project
-git clone <repo-url>
-cd ultron-v1
+# Clone the repository
+git clone https://github.com/LuckyRathee/ULTORN-v1.git
+cd ULTORN-v1
 
-# Create virtual environment
+# Setup Python Virtual Environment
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate  # On Windows: .\.venv\Scripts\Activate.ps1
 
-# Install dependencies
+# Install Backend Dependencies
 pip install -r requirements.txt
 
-# Configure environment
+# Configure Environment Variables
 cp .env.example .env
-# Edit .env with your API keys
 ```
 
-### Required Environment Variables
+### 3. Required Environment Variables (`.env`)
 
-```bash
-# App
+Configure your API credentials in `.env`:
+
+```env
+# Application Settings
 APP_HOST=0.0.0.0
 APP_PORT=8000
 LOG_LEVEL=INFO
 
-# Supabase (required for logging)
+# Supabase Telemetry (Optional / Recommended)
 SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_KEY=your-service-key
+SUPABASE_SERVICE_KEY=your-supabase-service-key
 
-# STT (Groq Whisper or local faster-whisper)
-STT_PROVIDER=groq
-GROQ_API_KEY=your-groq-key
-WHISPER_MODEL=base  # for local
+# Speech-to-Text (STT)
+STT_PROVIDER=elevenlabs # Options: elevenlabs, groq
+ELEVENLABS_API_KEY=your-elevenlabs-api-key
+GROQ_API_KEY=your-groq-api-key
 
-# LLM (Intent Extraction)
+# Intent LLM Extraction
 LLM_PROVIDER=groq
-GROQ_API_KEY=your-groq-key  # same as STT
-ANTHROPIC_API_KEY=your-anthropic-key  # alternative
-INTENT_MODEL=llama-3.1-8b-instant
+INTENT_MODEL=qwen/qwen3.6-27b
 
-# Weather API (Priority 1)
+# Service APIs
 WEATHER_API_KEY=your-weatherapi-key
-WEATHER_API_BASE=https://api.weatherapi.com/v1
-
-# Calendar API (Google OAuth2 - Priority 2)
-GOOGLE_CLIENT_ID=your-client-id
-GOOGLE_CLIENT_SECRET=your-client-secret
-GOOGLE_REDIRECT_URI=http://localhost:8000/auth/callback
-
-# Tasks API (Notion - Priority 3)
-NOTION_API_KEY=your-notion-key
-NOTION_DATABASE_ID=your-database-id
-
-# TTS (Optional)
-TTS_PROVIDER=elevenlabs
-ELEVENLABS_API_KEY=your-elevenlabs-key
-ELEVENLABS_VOICE_ID=your-voice-id
+NOTION_API_KEY=your-notion-integration-key
+NOTION_DATABASE_ID=your-notion-database-id
 ```
 
-### Run Supabase Migration
+---
 
-```sql
--- Run in Supabase SQL Editor
--- File: supabase/migrations/001_create_pipeline_runs.sql
-```
+## 🏃 Launching the Application
 
-### Start Server
+### One-Click Windows Launcher (Recommended)
+Double-click **`run_ultron.bat`** in the project root folder. It starts both the FastAPI backend (`:8000`) and Next.js frontend (`:2311`), automatically opening `http://localhost:2311` in your browser.
 
+### Manual Server Startup
+
+**Terminal 1 (Backend FastAPI):**
 ```bash
-uvicorn ultron.main:app --reload --host 0.0.0.0 --port 8000
+.\.venv\Scripts\Activate.ps1
+uvicorn --app-dir src ultron.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### Verify
-
+**Terminal 2 (Frontend Next.js):**
 ```bash
-# Health check
-curl http://localhost:8000/health
-
-# API Documentation
-open http://localhost:8000/docs  # Swagger UI
-open http://localhost:8000/redoc  # ReDoc
+cd frontend
+npm run dev
 ```
+
+---
 
 ## 📡 API Reference
 
-### Process Audio (Base64)
+### Health Check
+```http
+GET /health
+```
+**Response:**
+```json
+{
+  "status": "healthy",
+  "version": "1.0.0",
+  "checks": { "supabase": "ok", "stt": "ok", "llm": "ok", "weather_api": "ok" },
+  "uptime_seconds": 120
+}
+```
 
-```bash
+### Process Text Command
+```http
+POST /api/v1/process-text
+Content-Type: application/json
+
+{
+  "text": "What is the weather in London?",
+  "session_id": "session_user_123"
+}
+```
+
+### Process Audio Command (Base64)
+```http
 POST /api/v1/process-audio
 Content-Type: application/json
 
 {
-  "audio_base64": "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQ...",
-  "session_id": "user-session-123",
-  "user_id": "optional-user-id"
+  "audio_base64": "<base64_encoded_wav_bytes>",
+  "session_id": "session_user_123"
 }
 ```
 
-**Response:**
-```json
-{
-  "run_id": "550e8400-e29b-41d4-a716-446655440000",
-  "status": "done",
-  "transcription": {
-    "text": "What's the weather in London?",
-    "language": "en",
-    "confidence": 0.98,
-    "duration_ms": 2500
-  },
-  "intent": {
-    "intent": {
-      "type": "weather",
-      "location": "London",
-      "units": "metric",
-      "confidence": 0.95
-    },
-    "raw_llm_output": "...",
-    "extraction_latency_ms": 450
-  },
-  "action_result": {
-    "success": true,
-    "data": {
-      "location": "London, UK",
-      "temperature": 15.5,
-      "condition": "Partly cloudy",
-      "humidity": 65,
-      "wind_kph": 12.5,
-      "feels_like": 14.0,
-      "last_updated": "2024-01-15 10:30"
-    },
-    "error": null,
-    "error_type": null,
-    "latency_ms": 320
-  },
-  "response_text": "The weather in London is 15.5°C and partly cloudy.",
-  "audio_url": null,
-  "total_latency_ms": 1200
-}
-```
-
-### Process Audio (File Upload)
-
-```bash
-POST /api/v1/process-audio/file
-Content-Type: multipart/form-data
-
-audio_file: @recording.wav
-session_id: user-session-123
-```
-
-### Get Pipeline Run
-
-```bash
-GET /api/v1/runs/{run_id}
-```
-
-### List Pipeline Runs
-
-```bash
-GET /api/v1/runs?session_id=user-session-123&limit=20
-```
-
-### Health Check
-
-```bash
-GET /health
-```
+---
 
 ## 🧪 Testing
 
 ```bash
-# Run all tests
-pytest tests/ -v
+# Run unit test suite (excluding live API integration tests)
+python -m pytest -m "not integration" -v
 
-# Run specific test suites
-pytest tests/test_weather.py -v
-pytest tests/test_calendar.py -v
-pytest tests/test_tasks.py -v
-pytest tests/test_tts.py -v
-pytest tests/test_intent_extraction.py -v
-pytest tests/test_audio_transcription.py -v
-pytest tests/test_supabase_logging.py -v
-pytest tests/test_e2e_pipeline.py -v
+# Run full test suite with coverage report
+python -m pytest --cov=src/ultron tests/
 
-# With coverage
-pytest tests/ --cov=src/ultron --cov-report=html
+# Test Next.js frontend build
+cd frontend && npm run build
 ```
-
-### Test Coverage
-
-| Module | Tests | Coverage |
-|--------|-------|----------|
-| Weather Service | 14 | 100% |
-| Calendar Service | 14 | 100% |
-| Tasks Service | 14 | 100% |
-| TTS Service | 14 | 100% |
-| Intent Extraction | 29 | 100% |
-| Audio Transcription | 5 | 100% |
-| Supabase Logging | 4 | 100% |
-| E2E Pipeline | 11 | 100% |
-| **Total** | **105** | **~95%** |
-
-*29 tests skipped when API keys not configured (integration tests)*
-
-## 📁 Project Structure
-
-```
-ultron-v1/
-├── docs/
-│   └── architecture.md          # Detailed architecture document
-├── src/ultron/
-│   ├── main.py                  # FastAPI app entry point
-│   ├── config.py                # Pydantic settings
-│   ├── schemas/
-│   │   ├── intent.py            # Discriminated union Intent types
-│   │   ├── pipeline.py          # PipelineRun, StageResult
-│   │   └── api.py               # Request/Response models
-│   ├── state/
-│   │   ├── states.py            # PipelineState, StateData
-│   │   └── machine.py           # StateMachine orchestration
-│   ├── stages/
-│   │   ├── audio_input.py       # Stage 1: Audio validation
-│   │   ├── transcription.py     # Stage 2: Whisper STT
-│   │   ├── intent_extraction.py # Stage 3: LLM function-calling
-│   │   ├── action_execution.py  # Stage 4: Service routing
-│   │   └── response.py          # Stage 5: Response formatting
-│   ├── services/
-│   │   ├── stt.py               # Groq Whisper + local fallback
-│   │   ├── llm.py               # Groq Llama + Anthropic Claude
-│   │   ├── tts.py               # ElevenLabs + Azure TTS
-│   │   ├── weather.py           # WeatherAPI.com
-│   │   ├── calendar.py          # Google Calendar API
-│   │   └── tasks.py             # Notion API
-│   ├── persistence/
-│   │   └── supabase.py          # Pipeline run logging
-│   └── utils/
-│       ├── errors.py            # Typed exception hierarchy
-│       ├── audio.py             # Validation + ffmpeg conversion
-│       └── logging.py           # structlog JSON setup
-├── supabase/
-│   └── migrations/
-│       └── 001_create_pipeline_runs.sql
-├── tests/
-│   ├── test_weather.py
-│   ├── test_calendar.py
-│   ├── test_tasks.py
-│   ├── test_tts.py
-│   ├── test_intent_extraction.py
-│   ├── test_audio_transcription.py
-│   ├── test_supabase_logging.py
-│   ├── test_e2e_pipeline.py
-│   └── fixtures/
-│       ├── sample_audio.wav
-│       └── sample_transcripts.json
-├── .env.example
-├── pyproject.toml
-├── requirements.txt
-└── README.md
-```
-
-## 🔧 Configuration
-
-### STT Providers
-- **Groq** (default): Cloud Whisper API, fast, requires `GROQ_API_KEY`
-- **Local**: faster-whisper, offline, requires model download
-
-### LLM Providers
-- **Groq** (default): Llama 3.1 8B Instant, fast, requires `GROQ_API_KEY`
-- **Anthropic**: Claude 3 Haiku, higher quality, requires `ANTHROPIC_API_KEY`
-
-### TTS Providers
-- **ElevenLabs**: High quality, requires `ELEVENLABS_API_KEY`
-- **Azure**: Cognitive Services, requires `AZURE_TTS_KEY` + `AZURE_TTS_REGION`
-- **None**: Disable TTS (default)
-
-## 📊 Observability
-
-Each request creates a `pipeline_runs` row in Supabase with:
-
-```json
-{
-  "id": "uuid",
-  "session_id": "user-session-123",
-  "status": "done",
-  "stages": [
-    {"stage": "audio_input", "status": "success", "latency_ms": 45, ...},
-    {"stage": "transcription", "status": "success", "latency_ms": 850, ...},
-    {"stage": "intent_extraction", "status": "success", "latency_ms": 420, ...},
-    {"stage": "action_execution", "status": "success", "latency_ms": 310, ...},
-    {"stage": "response", "status": "success", "latency_ms": 15, ...}
-  ],
-  "total_latency_ms": 1640,
-  "created_at": "2024-01-15T10:30:00Z",
-  "completed_at": "2024-01-15T10:30:01Z"
-}
-```
-
-## 🛡️ Error Handling
-
-All external API calls return typed errors:
-
-```python
-# Client can handle explicitly
-try:
-    result = await get_weather("London")
-except WeatherError as e:
-    match e.error_type:
-        case "timeout": retry_with_backoff()
-        case "auth": prompt_for_new_key()
-        case "not_found": ask_user_for_clarification()
-        case _: show_generic_error(e.user_message)
-```
-
-## 📝 License
-
-MIT License - see LICENSE file for details.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Run tests (`pytest tests/ -v`)
-4. Commit changes (`git commit -m 'Add amazing feature'`)
-5. Push to branch (`git push origin feature/amazing-feature`)
-6. Open Pull Request
 
 ---
 
-**Built with**: FastAPI, Pydantic, Groq, WeatherAPI.com, Google Calendar, Notion, ElevenLabs, Supabase, structlog, tenacity
+## 🗂️ Project Directory Map
+
+```
+ULTORN-v1/
+├── docs/                        # Complete Documentation Suite
+├── src/ultron/                  # Backend Python Package
+│   ├── main.py                  # FastAPI Application Routes & Entry Point
+│   ├── config.py                # Environment Configuration Loader
+│   ├── schemas/                 # Pydantic Schemas (Intent, API, Pipeline)
+│   ├── state/                   # 7-Stage Typed State Machine Engine
+│   ├── stages/                  # Pipeline Stage Execution Functions
+│   ├── services/                # External Service Connectors (STT, LLM, TTS, Weather, Notion, Calendar)
+│   ├── memory/                  # Session & Vector Store Engine
+│   ├── briefing/                # Scheduled Daily Briefing Engine
+│   ├── persistence/             # Supabase Run Logging
+│   └── utils/                   # Audio conversion, Errors taxonomy, & Structlog
+├── frontend/                    # Next.js 16 Sci-Fi HUD Cockpit Web App
+│   └── src/
+│       ├── app/                 # Next.js App Router Page & Layout
+│       └── components/ui/       # Modular HUD Components (PulsarCore, PipelineTracker, UltronWidgets, HudHeader)
+├── tests/                       # Pytest Suite (Unit & Integration tests)
+├── .env.example                 # Environment variable template
+├── pyproject.toml               # Build & dependencies config
+└── run_ultron.bat               # One-click localhost launcher script
+```
+
+---
+
+## 📝 License
+
+This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
+
+---
+
+**Built with ❤️ by [Lucky Rathee](https://github.com/LuckyRathee)**  
+*FastAPI • Next.js • Pydantic • Groq • ElevenLabs • WeatherAPI • Notion • Supabase*
