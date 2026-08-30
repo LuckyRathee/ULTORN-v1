@@ -10,13 +10,13 @@ Whether you are a **non-technical reader**, recruiter, product manager, or softw
 
 | File | Audience | Description |
 |------|----------|-------------|
-| 📄 **[01. Project Overview](file:///d:/GitRepo/Jarvis%202.0/docs/01_PROJECT_OVERVIEW.md)** | Everyone | What is Ultron V1? Simple human metaphors, core capabilities, and why it's built. |
-| 📜 **[02. Past Versions & Evolution](file:///d:/GitRepo/Jarvis%202.0/docs/02_PAST_VERSIONS_AND_EVOLUTION.md)** | Everyone | The story of Jarvis 2.0 ➔ Ultron V1, phase-by-phase development history, and architectural lessons. |
-| 🏗️ **[03. Current Architecture](file:///d:/GitRepo/Jarvis%202.0/docs/03_CURRENT_ARCHITECTURE.md)** | Tech & Non-Tech | How Ultron V1 works under the hood: The 7-Stage State Machine, Speech STT, LLM Intent, and TTS. |
-| 🚀 **[04. Future Roadmap](file:///d:/GitRepo/Jarvis%202.0/docs/04_FUTURE_ROADMAP.md)** | Everyone | The 8-Level Agentic Capability Ladder: Screen Vision, ReAct Planning, OS RPA, and Autonomous Goals. |
-| 🛠️ **[05. Non-Tech User Guide](file:///d:/GitRepo/Jarvis%202.0/docs/05_NON_TECH_USER_GUIDE.md)** | Non-Technical | Simple 3-step guide on how to launch, configure, and use Ultron V1 on your computer. |
-| 💻 **[06. Developer & File System Guide](file:///d:/GitRepo/Jarvis%202.0/docs/06_DEVELOPER_CONTRIBUTION_GUIDE.md)** | Developers & Contributors | Complete directory map, execution trace, and step-by-step developer recipes to extend Ultron V1. |
-| 📐 **[Technical Architecture Spec](file:///d:/GitRepo/Jarvis%202.0/docs/architecture.md)** | Developers | Raw engineering specifications, Pydantic schemas, and error taxonomy. |
+| 📄 **[01. Project Overview](01_PROJECT_OVERVIEW.md)** | Everyone | What is Ultron V1? Simple human metaphors, core capabilities, and why it's built. |
+| 📜 **[02. Past Versions & Evolution](02_PAST_VERSIONS_AND_EVOLUTION.md)** | Everyone | The story of Jarvis 2.0 ➔ Ultron V1, phase-by-phase development history, and architectural lessons. |
+| 🏗️ **[03. Current Architecture](03_CURRENT_ARCHITECTURE.md)** | Tech & Non-Tech | How Ultron V1 works under the hood: The 7-Stage State Machine, Speech STT, LLM Intent, and TTS. |
+| 🚀 **[04. Future Roadmap](04_FUTURE_ROADMAP.md)** | Everyone | The 8-Level Agentic Capability Ladder: Screen Vision, ReAct Planning, OS RPA, and Autonomous Goals. |
+| 🛠️ **[05. Non-Tech User Guide](05_NON_TECH_USER_GUIDE.md)** | Non-Technical | Simple 3-step guide on how to launch, configure, and use Ultron V1 on your computer. |
+| 💻 **[06. Developer & File System Guide](06_DEVELOPER_CONTRIBUTION_GUIDE.md)** | Developers & Contributors | Complete directory map, execution trace, and step-by-step developer recipes to extend Ultron V1. |
+| 📐 **[Technical Architecture Spec](architecture.md)** | Developers | Raw engineering specifications, Pydantic schemas, and error taxonomy. |
 
 ---
 

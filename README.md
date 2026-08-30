@@ -12,7 +12,7 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-[**Explore Documentation**](file:///d:/GitRepo/Jarvis%202.0/docs/README.md) • [**Quick Start**](#-quick-start) • [**Architecture**](#-architecture--pipeline) • [**Roadmap**](#-the-8-level-agentic-roadmap) • [**Developer Guide**](file:///d:/GitRepo/Jarvis%202.0/docs/06_DEVELOPER_CONTRIBUTION_GUIDE.md)
+[**Explore Documentation**](docs/README.md) • [**Quick Start**](#-quick-start) • [**Architecture**](#-architecture--pipeline) • [**Roadmap**](#-the-8-level-agentic-roadmap) • [**Developer Guide**](docs/06_DEVELOPER_CONTRIBUTION_GUIDE.md)
 
 </div>
 
@@ -42,31 +42,31 @@ Click any of the cards below to dive into the comprehensive documentation suite:
 <table>
   <tr>
     <td width="50%">
-      <h3>📄 <a href="file:///d:/GitRepo/Jarvis%202.0/docs/01_PROJECT_OVERVIEW.md">Project Overview</a></h3>
+      <h3>📄 <a href="docs/01_PROJECT_OVERVIEW.md">Project Overview</a></h3>
       <p>Plain-English conceptual summary using 5 intuitive human analogies (<i>The Ears, The Brain, The Hands, The Voice, The Logbook</i>).</p>
     </td>
     <td width="50%">
-      <h3>📜 <a href="file:///d:/GitRepo/Jarvis%202.0/docs/02_PAST_VERSIONS_AND_EVOLUTION.md">Past Versions & History</a></h3>
+      <h3>📜 <a href="docs/02_PAST_VERSIONS_AND_EVOLUTION.md">Past Versions & History</a></h3>
       <p>The journey from <b>Jarvis 2.0 ➔ Ultron V1</b>, phase-by-phase history, and 4 major engineering battles solved.</p>
     </td>
   </tr>
   <tr>
     <td width="50%">
-      <h3>🏗️ <a href="file:///d:/GitRepo/Jarvis%202.0/docs/03_CURRENT_ARCHITECTURE.md">Current Architecture</a></h3>
+      <h3>🏗️ <a href="docs/03_CURRENT_ARCHITECTURE.md">Current Architecture</a></h3>
       <p>Technical breakdown of the 7-Stage State Machine, FastAPI backend, Next.js UI, & Supabase run telemetry.</p>
     </td>
     <td width="50%">
-      <h3>🚀 <a href="file:///d:/GitRepo/Jarvis%202.0/docs/04_FUTURE_ROADMAP.md">Future Agentic Roadmap</a></h3>
+      <h3>🚀 <a href="docs/04_FUTURE_ROADMAP.md">Future Agentic Roadmap</a></h3>
       <p>The 8-Level Agentic Capability Ladder: Screen Vision (Moondream), ReAct Task Planning, & OS RPA Desktop Automation.</p>
     </td>
   </tr>
   <tr>
     <td width="50%">
-      <h3>🛠️ <a href="file:///d:/GitRepo/Jarvis%202.0/docs/05_NON_TECH_USER_GUIDE.md">Non-Tech User Guide</a></h3>
+      <h3>🛠️ <a href="docs/05_NON_TECH_USER_GUIDE.md">Non-Tech User Guide</a></h3>
       <p>Simple 3-step launcher guide (<code>run_ultron.bat</code>), voice prompts to try out, & mic troubleshooting.</p>
     </td>
     <td width="50%">
-      <h3>💻 <a href="file:///d:/GitRepo/Jarvis%202.0/docs/06_DEVELOPER_CONTRIBUTION_GUIDE.md">Developer Guide</a></h3>
+      <h3>💻 <a href="docs/06_DEVELOPER_CONTRIBUTION_GUIDE.md">Developer Guide</a></h3>
       <p>Complete directory map, request execution trace, & step-by-step developer recipes to extend Ultron V1.</p>
     </td>
   </tr>
